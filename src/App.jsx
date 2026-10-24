@@ -3,13 +3,48 @@ import "./App.css";
 
 const CATEGORIES = ["Beef", "Chicken", "Dessert", "Pasta", "Seafood", "Vegetarian"];
 
+// Kamus teks untuk UI
+const TRANSLATIONS = {
+  id: {
+    searchPlaceholder: "Cari resep (misal: Pasta, Beef, Salmon)...",
+    searchBtn: "Cari",
+    tabSearch: "Semua Resep",
+    tabFav: "⭐ Favorit Saya",
+    randomBtn: "🎲 Kejutkan Aku! (Resep Acak)",
+    loading: "Mencari resep lezat...",
+    emptyFav: "Belum ada resep favorit. Klik bintang pada resep untuk menyimpannya!",
+    emptySearch: "Resep tidak ditemukan. Coba kata kunci lain.",
+    saveFav: "☆ Simpan",
+    savedFav: "⭐ Tersimpan",
+    ingredients: "Bahan-bahan:",
+    instructions: "Cara Membuat (Bahasa Inggris):"
+  },
+  en: {
+    searchPlaceholder: "Search recipe (e.g., Pasta, Beef, Salmon)...",
+    searchBtn: "Search",
+    tabSearch: "All Recipes",
+    tabFav: "⭐ My Favorites",
+    randomBtn: "🎲 Surprise Me! (Random Recipe)",
+    loading: "Finding delicious recipes...",
+    emptyFav: "No favorite recipes yet. Click the star on a recipe to save it!",
+    emptySearch: "Recipe not found. Try another keyword.",
+    saveFav: "☆ Save",
+    savedFav: "⭐ Saved",
+    ingredients: "Ingredients:",
+    instructions: "Instructions:"
+  }
+};
+
 function App() {
   const [query, setQuery] = useState("");
   const [meals, setMeals] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedMeal, setSelectedMeal] = useState(null);
   const [activeTab, setActiveTab] = useState("search");
+  const [lang, setLang] = useState("id"); // Default ke Bahasa Indonesia
   
+  const t = TRANSLATIONS[lang]; // Shortcut untuk memanggil teks
+
   const [favorites, setFavorites] = useState(() => {
     const saved = localStorage.getItem("vibe-favorites");
     return saved ? JSON.parse(saved) : [];
@@ -56,14 +91,13 @@ function App() {
     }
   };
 
-  // FITUR BARU: Ambil resep acak
   const getRandomMeal = async () => {
     setLoading(true);
     try {
       const res = await fetch(`https://www.themealdb.com/api/json/v1/1/random.php`);
       const data = await res.json();
       if (data.meals) {
-        setSelectedMeal(data.meals[0]); // Langsung buka pop-up resepnya
+        setSelectedMeal(data.meals[0]);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -111,17 +145,26 @@ function App() {
   return (
     <div className="app-wrapper">
       <div className="container">
-        <h1 className="title">🍳 Vibe Cooking</h1>
+        {/* Header dengan Tombol Ganti Bahasa */}
+        <div className="header-wrapper">
+          <h1 className="title">🍳 Vibe Cooking</h1>
+          <button 
+            className="lang-toggle" 
+            onClick={() => setLang(lang === "id" ? "en" : "id")}
+          >
+            {lang === "id" ? "🇬🇧 EN" : "🇮🇩 ID"}
+          </button>
+        </div>
         
         <form onSubmit={handleSearch} className="search-form">
           <input
             type="text"
-            placeholder="Cari resep (misal: Pasta, Beef, Salmon)..."
+            placeholder={t.searchPlaceholder}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="search-input"
           />
-          <button type="submit" className="btn-search">Cari</button>
+          <button type="submit" className="btn-search">{t.searchBtn}</button>
         </form>
 
         <div className="controls">
@@ -130,13 +173,13 @@ function App() {
               className={`tab-btn ${activeTab === "search" ? "active" : ""}`}
               onClick={() => setActiveTab("search")}
             >
-              Semua Resep
+              {t.tabSearch}
             </button>
             <button 
               className={`tab-btn ${activeTab === "favorites" ? "active" : ""}`}
               onClick={() => setActiveTab("favorites")}
             >
-              ⭐ Favorit Saya ({favorites.length})
+              {t.tabFav} ({favorites.length})
             </button>
           </div>
 
@@ -154,19 +197,16 @@ function App() {
             </div>
           )}
 
-          {/* FITUR BARU: Tombol Resep Acak */}
           <button onClick={getRandomMeal} className="btn-random">
-            🎲 Kejutkan Aku! (Resep Acak)
+            {t.randomBtn}
           </button>
         </div>
 
-        {loading && <p className="loading">Mencari resep lezat...</p>}
+        {loading && <p className="loading">{t.loading}</p>}
 
         {!loading && displayedMeals.length === 0 && (
           <p className="empty">
-            {activeTab === "favorites" 
-              ? "Belum ada resep favorit. Klik bintang pada resep untuk menyimpannya!" 
-              : "Resep tidak ditemukan. Coba kata kunci lain."}
+            {activeTab === "favorites" ? t.emptyFav : t.emptySearch}
           </p>
         )}
 
@@ -197,13 +237,13 @@ function App() {
                 className={`btn-fav ${isFavorite(selectedMeal.idMeal) ? "active" : ""}`}
                 onClick={() => toggleFavorite(selectedMeal)}
               >
-                {isFavorite(selectedMeal.idMeal) ? "⭐ Tersimpan" : "☆ Simpan"}
+                {isFavorite(selectedMeal.idMeal) ? t.savedFav : t.saveFav}
               </button>
             </div>
             
             <div className="modal-details">
               <div className="ingredients-box">
-                <h3>Bahan-bahan:</h3>
+                <h3>{t.ingredients}</h3>
                 <ul>
                   {getIngredients(selectedMeal).map((item, index) => (
                     <li key={index}>{item}</li>
@@ -212,7 +252,7 @@ function App() {
               </div>
               
               <div className="instructions-box">
-                <h3>Cara Membuat:</h3>
+                <h3>{t.instructions}</h3>
                 <p>{selectedMeal.strInstructions}</p>
               </div>
             </div>

@@ -389,3 +389,46 @@ body {
 .btn-random:active {
   transform: translateY(0);
 }
+
+/* --- HEADER & LANGUAGE TOGGLE --- */
+.header-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.title {
+  margin-bottom: 0 !important; /* Menimpa margin bawaan title */
+}
+
+.lang-toggle {
+  position: absolute;
+  right: 0;
+  padding: 8px 12px;
+  border-radius: 20px;
+  border: 2px solid #ff6b6b;
+  background: transparent;
+  color: #ff6b6b;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.lang-toggle:hover {
+  background: #ff6b6b;
+  color: white;
+}
+
+/* Responsive untuk HP */
+@media (max-width: 600px) {
+  .header-wrapper {
+    flex-direction: column;
+    gap: 15px;
+  }
+  .lang-toggle {
+    position: static;
+  }
+}
