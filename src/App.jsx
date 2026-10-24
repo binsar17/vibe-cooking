@@ -3,7 +3,6 @@ import "./App.css";
 
 const CATEGORIES = ["Beef", "Chicken", "Dessert", "Pasta", "Seafood", "Vegetarian"];
 
-// Kamus teks untuk UI
 const TRANSLATIONS = {
   id: {
     searchPlaceholder: "Cari resep (misal: Pasta, Beef, Salmon)...",
@@ -17,7 +16,8 @@ const TRANSLATIONS = {
     saveFav: "☆ Simpan",
     savedFav: "⭐ Tersimpan",
     ingredients: "Bahan-bahan:",
-    instructions: "Cara Membuat (Bahasa Inggris):"
+    instructions: "Cara Membuat:",
+    translating: "Menerjemahkan resep..."
   },
   en: {
     searchPlaceholder: "Search recipe (e.g., Pasta, Beef, Salmon)...",
@@ -31,7 +31,8 @@ const TRANSLATIONS = {
     saveFav: "☆ Save",
     savedFav: "⭐ Saved",
     ingredients: "Ingredients:",
-    instructions: "Instructions:"
+    instructions: "Instructions:",
+    translating: "Translating recipe..."
   }
 };
 
@@ -41,9 +42,13 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [selectedMeal, setSelectedMeal] = useState(null);
   const [activeTab, setActiveTab] = useState("search");
-  const [lang, setLang] = useState("id"); // Default ke Bahasa Indonesia
+  const [lang, setLang] = useState("id");
   
-  const t = TRANSLATIONS[lang]; // Shortcut untuk memanggil teks
+  // State untuk teks yang sudah diterjemahkan
+  const [translatedInstructions, setTranslatedInstructions] = useState("");
+  const [isTranslating, setIsTranslating] = useState(false);
+
+  const t = TRANSLATIONS[lang];
 
   const [favorites, setFavorites] = useState(() => {
     const saved = localStorage.getItem("vibe-favorites");
@@ -83,7 +88,10 @@ function App() {
     try {
       const res = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`);
       const data = await res.json();
-      if (data.meals) setSelectedMeal(data.meals[0]);
+      if (data.meals) {
+        setSelectedMeal(data.meals[0]);
+        translateRecipe(data.meals[0].strInstructions); // Terjemahkan saat kartu diklik
+      }
     } catch (error) {
       console.error("Error:", error);
     } finally {
@@ -98,6 +106,7 @@ function App() {
       const data = await res.json();
       if (data.meals) {
         setSelectedMeal(data.meals[0]);
+        translateRecipe(data.meals[0].strInstructions);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -105,6 +114,42 @@ function App() {
       setLoading(false);
     }
   };
+
+  // FUNGSI BARU: Menerjemahkan teks menggunakan MyMemory API (Gratis)
+  const translateRecipe = async (text) => {
+    if (lang === "en") {
+      setTranslatedInstructions(text); // Kalau bahasa EN, pakai teks asli
+      return;
+    }
+    
+    setIsTranslating(true);
+    try {
+      // Memecah teks berdasarkan enter agar tidak kena limit API
+      const chunks = text.split('\r\n').filter(c => c.trim() !== '');
+      let resultText = "";
+
+      for (let chunk of chunks) {
+        // Limit API gratis adalah 500 karakter per request
+        const limitedChunk = chunk.substring(0, 500); 
+        const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(limitedChunk)}&langpair=en|id`);
+        const data = await res.json();
+        resultText += data.responseData.translatedText + "\n\n";
+      }
+      setTranslatedInstructions(resultText);
+    } catch (error) {
+      console.error("Gagal menerjemahkan:", error);
+      setTranslatedInstructions(text); // Jika gagal, tampilkan teks asli
+    } finally {
+      setIsTranslating(false);
+    }
+  };
+
+  // Jika bahasa diganti saat modal terbuka, terjemahkan ulang
+  useEffect(() => {
+    if (selectedMeal) {
+      translateRecipe(selectedMeal.strInstructions);
+    }
+  }, [lang]);
 
   const toggleFavorite = (meal) => {
     let newFavs;
@@ -145,7 +190,6 @@ function App() {
   return (
     <div className="app-wrapper">
       <div className="container">
-        {/* Header dengan Tombol Ganti Bahasa */}
         <div className="header-wrapper">
           <h1 className="title">🍳 Vibe Cooking</h1>
           <button 
@@ -253,7 +297,11 @@ function App() {
               
               <div className="instructions-box">
                 <h3>{t.instructions}</h3>
-                <p>{selectedMeal.strInstructions}</p>
+                {isTranslating ? (
+                  <p style={{ color: "#ff6b6b", fontWeight: "bold" }}>⏳ {t.translating}</p>
+                ) : (
+                  <p>{translatedInstructions || selectedMeal.strInstructions}</p>
+                )}
               </div>
             </div>
           </div>
