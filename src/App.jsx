@@ -56,6 +56,22 @@ function App() {
     }
   };
 
+  // FITUR BARU: Ambil resep acak
+  const getRandomMeal = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`https://www.themealdb.com/api/json/v1/1/random.php`);
+      const data = await res.json();
+      if (data.meals) {
+        setSelectedMeal(data.meals[0]); // Langsung buka pop-up resepnya
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const toggleFavorite = (meal) => {
     let newFavs;
     if (favorites.some((fav) => fav.idMeal === meal.idMeal)) {
@@ -137,6 +153,11 @@ function App() {
               ))}
             </div>
           )}
+
+          {/* FITUR BARU: Tombol Resep Acak */}
+          <button onClick={getRandomMeal} className="btn-random">
+            🎲 Kejutkan Aku! (Resep Acak)
+          </button>
         </div>
 
         {loading && <p className="loading">Mencari resep lezat...</p>}
