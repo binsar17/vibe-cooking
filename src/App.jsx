@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 
-// Daftar kategori bawaan dari API TheMealDB
 const CATEGORIES = ["Beef", "Chicken", "Dessert", "Pasta", "Seafood", "Vegetarian"];
 
 function App() {
@@ -9,15 +8,13 @@ function App() {
   const [meals, setMeals] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedMeal, setSelectedMeal] = useState(null);
-  const [activeTab, setActiveTab] = useState("search"); // 'search' atau 'favorites'
+  const [activeTab, setActiveTab] = useState("search");
   
-  // State untuk menyimpan resep favorit
   const [favorites, setFavorites] = useState(() => {
     const saved = localStorage.getItem("vibe-favorites");
     return saved ? JSON.parse(saved) : [];
   });
 
-  // Fungsi mencari resep berdasarkan teks
   const searchMeals = async (searchQuery) => {
     setLoading(true);
     setActiveTab("search");
@@ -32,7 +29,6 @@ function App() {
     }
   };
 
-  // Fungsi filter berdasarkan kategori
   const filterByCategory = async (category) => {
     setLoading(true);
     setActiveTab("search");
@@ -47,7 +43,6 @@ function App() {
     }
   };
 
-  // Fungsi ambil detail lengkap saat kartu diklik (karena API filter tidak menyertakan bahan)
   const handleCardClick = async (mealId) => {
     setLoading(true);
     try {
@@ -61,7 +56,6 @@ function App() {
     }
   };
 
-  // Simpan / Hapus Favorit
   const toggleFavorite = (meal) => {
     let newFavs;
     if (favorites.some((fav) => fav.idMeal === meal.idMeal)) {
@@ -73,10 +67,8 @@ function App() {
     localStorage.setItem("vibe-favorites", JSON.stringify(newFavs));
   };
 
-  // Cek apakah resep sudah difavoritkan
   const isFavorite = (id) => favorites.some((fav) => fav.idMeal === id);
 
-  // Load resep "Chicken" saat pertama kali dibuka
   useEffect(() => {
     searchMeals("chicken");
   }, []);
@@ -86,7 +78,6 @@ function App() {
     if (query.trim()) searchMeals(query);
   };
 
-  // Mengambil bahan-bahan dari API
   const getIngredients = (meal) => {
     let ingredients = [];
     for (let i = 1; i <= 20; i++) {
@@ -99,7 +90,6 @@ function App() {
     return ingredients;
   };
 
-  // Tentukan data mana yang mau ditampilkan (hasil search atau favorit)
   const displayedMeals = activeTab === "favorites" ? favorites : meals;
 
   return (
@@ -118,7 +108,6 @@ function App() {
           <button type="submit" className="btn-search">Cari</button>
         </form>
 
-        {/* Tab Menu & Filter Kategori */}
         <div className="controls">
           <div className="tabs">
             <button 
@@ -175,7 +164,6 @@ function App() {
         </div>
       </div>
 
-      {/* MODAL DETAIL RESEP */}
       {selectedMeal && (
         <div className="modal-overlay" onClick={() => setSelectedMeal(null)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>

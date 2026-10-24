@@ -1,6 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* { 
+  box-sizing: border-box; 
+  margin: 0; 
+  padding: 0; 
+}
 
 body {
   font-family: 'Poppins', sans-serif;
@@ -23,13 +27,14 @@ body {
   font-size: 2.5rem;
   color: #ff6b6b;
   margin-bottom: 30px;
+  font-weight: 700;
 }
 
 .search-form {
   display: flex;
   gap: 10px;
   max-width: 600px;
-  margin: 0 auto 40px auto;
+  margin: 0 auto 30px auto;
 }
 
 .search-input {
@@ -43,7 +48,9 @@ body {
   transition: border-color 0.3s;
 }
 
-.search-input:focus { border-color: #ff6b6b; }
+.search-input:focus { 
+  border-color: #ff6b6b; 
+}
 
 .btn-search {
   padding: 15px 30px;
@@ -53,46 +60,16 @@ body {
   color: white;
   font-weight: 600;
   font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
   cursor: pointer;
   transition: background 0.3s;
 }
 
-.btn-search:hover { background-color: #ee5253; }
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 25px;
+.btn-search:hover { 
+  background-color: #ee5253; 
 }
 
-.card {
-  background: white;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-  cursor: pointer;
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-}
-
-.card-img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-}
-
-.card-body { padding: 20px; }
-.card-body h3 { font-size: 1.2rem; margin-bottom: 10px; }
-
-.badge {
-  background: #ffeaa7;
-  color: #
-
-/* --- TAB & FILTER KATEGORI --- */
+/* --- TABS & CATEGORIES --- */
 .controls {
   max-width: 800px;
   margin: 0 auto 30px auto;
@@ -114,6 +91,7 @@ body {
   background: #e0e0e0;
   color: #555;
   font-weight: 600;
+  font-family: 'Poppins', sans-serif;
   cursor: pointer;
   transition: all 0.3s;
 }
@@ -138,6 +116,7 @@ body {
   background: transparent;
   color: #ff6b6b;
   font-weight: 500;
+  font-family: 'Poppins', sans-serif;
   cursor: pointer;
   transition: all 0.3s;
 }
@@ -147,7 +126,128 @@ body {
   color: white;
 }
 
-/* --- MODAL HEADER (UNTUK TOMBOL FAVORIT) --- */
+/* --- GRID & CARDS --- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 25px;
+}
+
+.card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+
+.card-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.card-body { 
+  padding: 20px; 
+}
+
+.card-body h3 { 
+  font-size: 1.2rem; 
+  margin-bottom: 10px; 
+  color: #222;
+  line-height: 1.3;
+}
+
+.badge {
+  background: #ffeaa7;
+  color: #d63031;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
+/* --- LOADING & EMPTY STATE --- */
+.loading, .empty {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #888;
+  margin-top: 40px;
+}
+
+/* --- MODAL (POP-UP) --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-content {
+  background: white;
+  width: 100%;
+  max-width: 800px;
+  max-height: 90vh;
+  border-radius: 20px;
+  overflow-y: auto;
+  position: relative;
+  padding: 30px;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.btn-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: #ff6b6b;
+  color: white;
+  border: none;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s;
+  z-index: 10;
+}
+
+.btn-close:hover { 
+  background: #ee5253; 
+}
+
+.modal-img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 15px;
+  margin-bottom: 20px;
+}
+
 .modal-header {
   display: flex;
   justify-content: space-between;
@@ -157,6 +257,8 @@ body {
 
 .modal-header h2 {
   margin: 0;
+  color: #222;
+  font-size: 1.8rem;
   text-align: left;
 }
 
@@ -167,6 +269,7 @@ body {
   background: white;
   color: #ff6b6b;
   font-weight: bold;
+  font-family: 'Poppins', sans-serif;
   cursor: pointer;
   transition: all 0.3s;
 }
@@ -176,16 +279,83 @@ body {
   color: white;
 }
 
-/* Responsive HP */
-@media (max-width: 600px) {
+.modal-details {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 30px;
+}
+
+.ingredients-box {
+  background: #f7f9fc;
+  padding: 20px;
+  border-radius: 15px;
+}
+
+.ingredients-box h3, .instructions-box h3 {
+  color: #ff6b6b;
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
+.ingredients-box ul {
+  list-style-type: none;
+}
+
+.ingredients-box li {
+  padding: 8px 0;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 0.95rem;
+  color: #444;
+}
+
+.ingredients-box li:last-child {
+  border-bottom: none;
+}
+
+.instructions-box p {
+  line-height: 1.8;
+  color: #444;
+  font-size: 0.95rem;
+  white-space: pre-line;
+}
+
+/* --- RESPONSIVE HP --- */
+@media (max-width: 768px) {
+  .title { 
+    font-size: 2rem; 
+  }
+  
+  .search-form {
+    flex-direction: column;
+  }
+  
+  .btn-search {
+    width: 100%;
+    padding: 15px;
+  }
+
   .tabs {
     flex-direction: column;
   }
+
+  .modal-details {
+    grid-template-columns: 1fr; 
+  }
+
   .modal-header {
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
   }
+  
   .modal-header h2 {
     text-align: center;
   }
-}  
+
+  .modal-content {
+    padding: 20px;
+  }
+
+  .modal-img {
+    height: 180px;
+  }
+}
