@@ -91,3 +91,101 @@ body {
 .badge {
   background: #ffeaa7;
   color: #
+
+/* --- TAB & FILTER KATEGORI --- */
+.controls {
+  max-width: 800px;
+  margin: 0 auto 30px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.tab-btn {
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: none;
+  background: #e0e0e0;
+  color: #555;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.tab-btn.active {
+  background: #ff6b6b;
+  color: white;
+  box-shadow: 0 4px 10px rgba(255, 107, 107, 0.3);
+}
+
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.category-chip {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid #ff6b6b;
+  background: transparent;
+  color: #ff6b6b;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.category-chip:hover {
+  background: #ff6b6b;
+  color: white;
+}
+
+/* --- MODAL HEADER (UNTUK TOMBOL FAVORIT) --- */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modal-header h2 {
+  margin: 0;
+  text-align: left;
+}
+
+.btn-fav {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 2px solid #ff6b6b;
+  background: white;
+  color: #ff6b6b;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-fav:hover, .btn-fav.active {
+  background: #ff6b6b;
+  color: white;
+}
+
+/* Responsive HP */
+@media (max-width: 600px) {
+  .tabs {
+    flex-direction: column;
+  }
+  .modal-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .modal-header h2 {
+    text-align: center;
+  }
+}  
